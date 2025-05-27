@@ -17,7 +17,7 @@ CLASS zcl_lab_03_datatypes_ang IMPLEMENTATION.
 
   METHOD if_oo_adt_classrun~main.
 
-"  **********PART 1
+    "  **********PART 1
 
     DATA: mv_char  TYPE c LENGTH 10 VALUE '12345',
           mv_num   TYPE i,
@@ -83,6 +83,14 @@ CLASS zcl_lab_03_datatypes_ang IMPLEMENTATION.
 
     mv_timestamp = utclong_add( val = mv_timestamp hours = -2 ).
     out->write( mv_timestamp ).
+
+    TYPES: BEGIN OF ty_empleado,
+             nombre   TYPE string,
+             apellido TYPE string,
+           END OF ty_empleado.
+
+
+
 
   ENDMETHOD.
 ENDCLASS.
