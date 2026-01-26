@@ -33,7 +33,7 @@ CLASS zcl_03_reftype_ang IMPLEMENTATION.
 
 ************
 
-    DATA lo_ref TYPE REF TO zcl_02_complexty_data_angelo.
+*    DATA lo_ref TYPE REF TO zcl_02_complexty_data_angelo.
 
   ENDMETHOD.
 ENDCLASS.
