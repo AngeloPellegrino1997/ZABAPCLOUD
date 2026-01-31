@@ -266,10 +266,9 @@ CLASS zcl_06_char_ope IMPLEMENTATION.
 
 
 *********REPLACE
-
-    DATA(lv_replace) = 'Logali-Group-SAP-Academy'.
-    DATA(lv_sign) = '-'.""ESTA VARIABLE FUE CREADA CON LA FINALIDAD DE PONER EL VALOR QUE SE QUERIA REMPLAZAR
-    out->write( lv_replace ).
+*    DATA(lv_replace) = 'Logali-Group-SAP-Academy'.
+*    DATA(lv_sign) = '-'.""ESTA VARIABLE FUE CREADA CON LA FINALIDAD DE PONER EL VALOR QUE SE QUERIA REMPLAZAR
+*    out->write( lv_replace ).
 
 *    REPLACE lv_sign WITH '/' INTO lv_replace.""AQUI CON ESTA SENTENCIA SOLO SE REMPLAZARA EL PRIMER VALOR ENCONTRADO QUE COINCIDA CON EL QUE SE QUIERE QUITAR
 
@@ -281,12 +280,130 @@ CLASS zcl_06_char_ope IMPLEMENTATION.
 
 ****MEDIANTE LA FUNCION replace()
 
-    lv_replace = replace( val = lv_replace sub = lv_sign with = '/' occ = 0 ). ""occ QUIERE DECIR DESDE QUE NUMERO DE OCURRENCIA, SE VA A EMPEZAR A SUSTITUIR EL VALOR
-    out->write( lv_replace ).
+*    lv_replace = replace( val = lv_replace sub = lv_sign with = '/' occ = 0 ). ""occ QUIERE DECIR DESDE QUE NUMERO DE OCURRENCIA, SE VA A EMPEZAR A SUSTITUIR EL VALOR
+*    out->write( lv_replace ).
 
 
-     lv_replace = replace( val = lv_replace with = '#' off = 5 len = 3 ).
-     out->write( lv_replace ).
+*    lv_replace = replace( val = lv_replace with = '#' off = 5 len = 3 ).
+*    out->write( lv_replace ).
+
+
+**********COMPARISON OPERATORS
+
+*****CP "" CP SIGNIFICA: CONTIENE EL PATRON
+
+*    DATA lv_match TYPE abap_bool. "" EL TIPO abap_bool, TOMA VALORES VERDEROS O FALSOS
+
+*    DATA(lv_text) = 'This is an example text for SAP_ABAP programming'.
+
+*    IF lv_text CP '*SAP#_*'. "" CON LOS * QUIERE DECIR QUE VA A TOMAR CUALQUIR SECUENCIA DE CARACTERES, INCLUIDOS ESPACIOS EN BLANCO Y EL # QUIERE DECIR QUE EL SIGUENTE CARACTER DEBE REALIZAR UNA COMPARACION EXACTA ES DECIR,SI O SI DEBE ESTAR PRESENTE.
+*      lv_match = abap_true.
+*      out->write( 'The text contains the pattern "SAP"' ).
+*    ELSE.
+*      lv_match = abap_false.
+*      out->write( 'The text does not contain he pattern "SAP"' ).
+*    ENDIF.
+
+
+*****NP "" NP SIGNIFICA: NO CONTIENE EL PATRON
+
+*    DATA lv_match TYPE abap_bool.
+
+*    DATA(lv_text) = 'This is an example text for SAP_ABAP programming'.
+
+*    IF lv_text NP '*g+'. "" AQUI LO UQE SE BUSCA ES ESPCIFICAMENTE ESE PATRON DE g+, REPRESENTANDO EL + CUALQUIERE TIPO DE CARACTER DESPUES DE LA g, PARA TOMAR EN CUENTA LOS ANTES D LA g SE AGREGA EL *
+*      lv_match = abap_true.
+*      out->write( 'The text does not contains the pattern "g"' ).
+*    ELSE.
+*      lv_match = abap_false.
+*      out->write( 'The text contain he pattern "g"' ).
+*    ENDIF.
+
+
+**********PCRE REGEX "" PCRE SIGNIFICA: PER COMPATIBLE REGULAR EXPRESSIONS
+
+    DATA(lv_pcre) = '^[_a-z0-9-]+(\.[_a-z0-9-]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,4})$'. ""AL CONTENIDO DE ESTO SE LE LLAMA EXPRESION REGULAR
+
+    DATA(lv_email) = 'alumno@logali.com'.
+
+*    FIND REGEX lv_pcre IN lv_email. ""ESTA HACE LOS MISMO SOO QU ESTA OBSOLETO
+
+*    FIND PCRE lv_pcre IN lv_email.
+
+*    IF sy-subrc EQ 0. ""sy-algo SON VARIABLES HECHAS POR EL SISTEMA
+*      out->write( 'OK' ).
+*    ELSE.
+*      out->write( 'NO OK' ).
+*    ENDIF.
+
+*    DATA(lv_text) = '123A?*Z100004#~$_AA'.
+
+*    REPLACE ALL OCCURRENCES OF PCRE '[^A-Za-z0-9]+' IN lv_text WITH | |. "" AQUI LO QUE SE HACE ES SUSTITUIR TODO AQUELLO QUE NO SEA UNA LETRA O NUMERO POR UN ESPACIO
+
+*    out->write( lv_text ).
+
+
+**********REGULAR EXPRESSIONS
+
+*    DATA(lv_text) = 'ABAPppp Xpp1 SAppP'.
+
+*    DATA lv_text2 TYPE string.
+
+*    lv_text2 = replace( val = lv_text pcre = 'p{2,4}' with = '*' occ = 0 ). "" p{2,4} ESTO SIGNIFICA QUE VA A BUSCAR LA P MINUSCULA Y QUE DEBE ENCONTRAR ENTRE 2 A 4 PARA ASI PODER SER REMPLAZADO POR *
+*    out->write( lv_text2 ).
+
+*    lv_text2 = replace( val = lv_text pcre = '[^SAP]' with = '*' occ = 0 ).
+*    out->write( lv_text2 ).
+
+*    lv_text2 = replace( val = lv_text pcre = '\s' with = '//'  ). "" \ REPRESENTA UN ESPACIO, ES DECIR UN ESPACI ENTRE LETRAS, NUMEROS O CARACTER
+*    out->write( lv_text2 ).
+
+*    REPLACE ALL OCCURRENCES OF PCRE '\s' IN lv_text WITH '?'. "" ESTAS ESTA ES LA FORMA ANTIGUA PERO S EUSA PARA REMPLAZAR TODOS
+*    out->write( lv_text ).
+
+
+**********REPEAT
+
+*    DATA(lv_text) = repeat( val = 'Logali' occ = 4 ). ""occ REPRESENTA EL NUMERO DE VECES QUE SE VA A HHACER LA ACCION EN VAL
+*    out->write( lv_text ).
+
+
+*    DATA(lv_text2) = | abap { repeat( val = ` ` occ = 10 ) } abap |.
+*    out->write( lv_text2 ).
+
+
+*    DATA(lv_text3) = | abap { repeat( val = ` ` occ = -10 ) } abap |."" EL TENER UN occ NEGATIVO, DARA ERROR PERO HAY UA FORMA DE TRABAJARLO.
+*    out->write( lv_text3 ).
+
+
+*    TRY.
+*        DATA(lv_text3) = | abap { repeat( val = ` ` occ = -10 ) } abap |.
+*      CATCH cx_sy_strg_par_val. ""ESTO ES EL NOBRE DE LA EXEPCION QUE ARROJA AL HACER ESTO
+*        out->write( 'LA OPERACON ES INVALIDA' ).
+*    ENDTRY.
+
+
+**********ESCAPE ""ESTA FUNCION DEVULEVE UNA CADENA DE CARACTERES, DEPENDIENTE DEL PARAMETRO QUE ESTEMOS USANDO
+
+*****URLs
+
+    DATA(lv_url) = escape( val = 'Logali ABAP Academy @300' format = cl_abap_format=>e_url_full ). ""EN FORMAT, USAOS UN FORMATO YA ESTABLECIDO EN UNA CLASE GLOBAL
+    out->write( lv_url ).
+
+*****JSON
+
+    DATA(lv_json) = escape( val = 'Logali "ABAP" test json \ Academy @300' format = cl_abap_format=>e_json_string ).
+    out->write( lv_json ).
+
+*****STRING TEMPLATES
+
+    DATA(lv_string) = escape( val = 'Special characters in string templates: |, \, {, }' format = cl_abap_format=>e_string_tpl ).
+    out->write( lv_string ).
+
+
+
+
+
 
   ENDMETHOD.
 
