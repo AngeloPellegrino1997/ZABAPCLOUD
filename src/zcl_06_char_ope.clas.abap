@@ -405,6 +405,7 @@ CLASS zcl_06_char_ope IMPLEMENTATION.
 
 
 
+
   ENDMETHOD.
 
 ENDCLASS.
