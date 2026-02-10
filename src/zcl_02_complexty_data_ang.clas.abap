@@ -29,7 +29,7 @@ CLASS zcl_02_complexty_data_ang IMPLEMENTATION.
                            name = 'Laura'
                            age = 25 ).
 
-    "out->write( |ID:{ ls_employee-id } Name:{ ls_employee-name } Age:{ ls_employee-age } | ).
+    out->write( |ID:{ ls_employee-id } Name:{ ls_employee-name } Age:{ ls_employee-age } | ).
 
     TYPES: BEGIN OF ENUM lty_invoice_status,
              pending_payment,
