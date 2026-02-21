@@ -59,22 +59,56 @@ CLASS zcl_09_itab_angelo IMPLEMENTATION.
 
 *****STANDARD TABLE
 
-    DATA lt_flight_stand TYPE STANDARD TABLE OF /dmo/flight.
+    DATA lt_flight_stand TYPE STANDARD TABLE OF /dmo/flight WITH EMPTY KEY. ""SOLO LAS TABLAS STANDARD PUEDEN TENE RCLAVE VACIA
     DATA lt_flight_stand2 TYPE TABLE OF /dmo/flight. ""TABMIEN SE PUEDE DECLARAR UNA STANDARD SIN PONER LA PALABRA STANDARD
 
 *****SORTED TABLE
 
     DATA lt_flight_sort TYPE SORTED TABLE OF /dmo/flight WITH NON-UNIQUE KEY carrier_id. ""ESTA PUDEN TENER CLAVE NON-UNIQUE O UNIQUE Y EN CASO DE TENER LA CLAVE UNIQUE,
-                                                                                         ""NO SE PUDE TENER MAS DE UN REGISTRO CON LA MISMA CLAVE Y EL NON-UNIQUE QUIERE DECIR QUE PODMEOS TENER LA MISMA CLAVE
+    ""NO SE PUDE TENER MAS DE UN REGISTRO CON LA MISMA CLAVE Y EL NON-UNIQUE QUIERE DECIR QUE PODMEOS TENER LA MISMA CLAVE
 
 *****HASHED TABLE
 
     DATA lt_flight_hashed TYPE HASHED TABLE OF /dmo/flight WITH UNIQUE KEY carrier_id.
 
 
+**********ADDING REGISTERS
+
+    DATA: lt_employees TYPE STANDARD TABLE OF zemploy_table_ap,
+          ls_employeee TYPE zemploy_table_ap.
+
+    TYPES lty_employee LIKE lt_employees. ""AQUI SE USA LIKE PORQUE SI USAS TYPE TIRA UN ERROR
+
+    lt_employees = VALUE #( ( id = 0000
+                              first_name = 'MARIO'
+                              last_name = 'MARTINEZ'
+                              email = 'MARIOM@LOGALI.COM'
+                              phone_number = '1234567'
+                              salary = '2000.3'
+                              currency_code = 'EUR'       ) ).
+
+*    out->write( lt_employees ).
 
 
 
+    ""AQUI COMO ES DECLARADA EN LINEA Y EN NINGUN LADO SE HA PUESTO EL TIPO QUE SE MANEJA, SE ACLARA DESPUES DE VALUE
+    DATA(lt_employees2) = VALUE lty_employee( ( id = 0000
+                                                first_name = 'MARIO'
+                                                last_name = 'MARTINEZ'
+                                                email = 'MARIOM@LOGALI.COM'
+                                                phone_number = '1234567'
+                                                salary = '2000.3'
+                                                currency_code = 'EUR' )
+
+                                                ( id = 0001
+                                                 first_name = 'LAURA'
+                                                 last_name = 'GRACIA'
+                                                 email = 'LAGARCIA@GMAIL.COM'
+                                                 phone_number = '32364568'
+                                                 salary = '2000.3'
+                                                 currency_code = 'EUR' ) ).
+
+    out->write( lt_employees2 ).
 
 
 
