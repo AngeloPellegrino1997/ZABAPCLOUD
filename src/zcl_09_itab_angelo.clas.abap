@@ -74,41 +74,265 @@ CLASS zcl_09_itab_angelo IMPLEMENTATION.
 
 **********ADDING REGISTERS
 
-    DATA: lt_employees TYPE STANDARD TABLE OF zemploy_table_ap,
-          ls_employeee TYPE zemploy_table_ap.
+*    DATA: lt_employees TYPE STANDARD TABLE OF zemploy_table_ap,
+*    ls_employeee type zemploy_table_ap.
 
-    TYPES lty_employee LIKE lt_employees. ""AQUI SE USA LIKE PORQUE SI USAS TYPE TIRA UN ERROR
+*    TYPES lty_employee LIKE lt_employees. ""AQUI SE USA LIKE PORQUE SI USAS TYPE TIRA UN ERROR
 
-    lt_employees = VALUE #( ( id = 0000
-                              first_name = 'MARIO'
-                              last_name = 'MARTINEZ'
-                              email = 'MARIOM@LOGALI.COM'
-                              phone_number = '1234567'
-                              salary = '2000.3'
-                              currency_code = 'EUR'       ) ).
+*    lt_employees = VALUE #( ( id = 0000
+*                              first_name = 'MARIO'
+*                              last_name = 'MARTINEZ'
+*                              email = 'MARIOM@LOGALI.COM'
+*                              phone_number = '1234567'
+*                              salary = '2000.3'
+*                              currency_code = 'EUR'       ) ).
 
 *    out->write( lt_employees ).
 
 
 
     ""AQUI COMO ES DECLARADA EN LINEA Y EN NINGUN LADO SE HA PUESTO EL TIPO QUE SE MANEJA, SE ACLARA DESPUES DE VALUE
-    DATA(lt_employees2) = VALUE lty_employee( ( id = 0000
-                                                first_name = 'MARIO'
-                                                last_name = 'MARTINEZ'
-                                                email = 'MARIOM@LOGALI.COM'
-                                                phone_number = '1234567'
-                                                salary = '2000.3'
-                                                currency_code = 'EUR' )
+*    DATA(lt_employees2) = VALUE lty_employee( ( id = 0000
+*                                                first_name = 'MARIO'
+*                                                last_name = 'MARTINEZ'
+*                                                email = 'MARIOM@LOGALI.COM'
+*                                                phone_number = '1234567'
+*                                                salary = '2000.3'
+*                                                currency_code = 'EUR' )
 
-                                                ( id = 0001
-                                                 first_name = 'LAURA'
-                                                 last_name = 'GRACIA'
-                                                 email = 'LAGARCIA@GMAIL.COM'
-                                                 phone_number = '32364568'
-                                                 salary = '2000.3'
-                                                 currency_code = 'EUR' ) ).
+*                                                ( id = 0001
+*                                                 first_name = 'LAURA'
+*                                                 last_name = 'GRACIA'
+*                                                 email = 'LAGARCIA@GMAIL.COM'
+*                                                 phone_number = '32364568'
+*                                                 salary = '2000.3'
+*                                                 currency_code = 'EUR' ) ).
 
-    out->write( lt_employees2 ).
+*    out->write( lt_employees2 ).
+
+
+**********INSERTING REGISTERS ""LA DIFRENCIA DE INSERTAR Y AÑADIR, ES QUE CON INSERTAR PODMEOS ESPECIFICAR EL INDICE EN DONDE QUEREMOS INSERTAR EL REGISTRO
+
+    DATA: lt_employees TYPE STANDARD TABLE OF zemploy_table_ap,
+          ls_employee  TYPE zemploy_table_ap.
+
+
+*    ls_employee-id = 0002    .
+*    ls_employee-first_name = 'MARIO'.
+*    ls_employee-last_name = 'MARTINEZ'.
+*    ls_employee-email = 'MARIOM@GMAIL.COM'.  ""TODO ESTO ES UN REGISTRO CREADO QUE AUN NO HA SIDO INSERTADO
+*    ls_employee-phone_number = '1234567'.
+*    ls_employee-salary = '2000.3'.
+*    ls_employee-currency_code = 'EUR'.
+
+
+*    INSERT ls_employee INTO TABLE lt_employees.
+
+*    out->write( lt_employees ).
+
+*****INSERT VALUE ""ESTA ES UNA FORMA MAS ACTUAL, LA CUAL NO NECESITA DE DECLARAR UNA ESTRUCTURA Y LO INSERTAS DIRECTAMENTE A LA TABLA
+
+*    INSERT VALUE #( id = 0001
+*    first_name = 'LAURA'
+*    last_name = 'MARTINEZ'
+*    email = 'LAURAM@GMAIL.COM'
+*    phone_number = '38512369'
+*    salary = '2000.3'
+*    currency_code = 'EUR'     ) INTO TABLE lt_employees.
+
+*    INSERT INITIAL LINE INTO TABLE lt_employees. ""AÑADIMOS UN REGISTRO EN BLANCO EN LA TABLA
+
+
+
+*    INSERT VALUE #( id = 0003
+*        first_name = 'DANIELA'
+*        last_name = 'LINARES'
+*        email = 'DANIELAL@GMAIL.COM'
+*        phone_number = '456789'
+*        salary = '3000'
+*        currency_code = 'EUR'     ) INTO lt_employees INDEX 2. ""AQUI ESTAMOS AGREGADO UN REGISTRO EN UN LUGAR ESPECIFICO POR MEDIO DEL INDICE
+
+
+*    out->write( lt_employees ).
+
+    DATA lt_employees2 LIKE lt_employees.
+
+*    INSERT LINES OF lt_employees INTO TABLE lt_employees2. ""AQUI LE PUSIMOS TODOS LOS EGISTROS DE LA TABLA ANTERIROR A ESTA NUEVA
+
+*    INSERT LINES OF lt_employees TO 1 INTO TABLE lt_employees2. ""AQUI VOLCAMOS LA INFORMACION HASTA EL INDICE INDICADO, EN ESTE CASO EL UNO
+
+*    INSERT LINES OF lt_employees FROM 2 TO 3 INTO TABLE lt_employees2. ""Y ESTA TOMA DESDE UN INDICE HASTA OTRO
+
+*    out->write( data = lt_employees name = 'EMPLOYEE TABLE' ).
+*    out->write( |\n| ).
+*    out->write( data = lt_employees2 name = 'EMPLOYEE TABLE 2' ).
+
+
+***********APPEND ""SE USA PARA AÑADIR REGISTROS, ESTA AÑADE SIEMPRE EL REGISTRO EN LA PARTE INFERIOR DE LA TABLA INTERNA Y SE USA CON LAS TABLAS DE TIPO ETANDARD
+    ""ESTE NO ES APTO PARA USARLO CON TABLASDEL TIPO HASHED Y SORTED, PORQUE LO REGISTROS SE AÑADEN SOLO SI CONINCIDEN CON EL ORDEN DE LA CLAVE
+    ""Y NO SE CREAN ENTRADAS DUPLICADAS CUANDOLA CLAVE ES UNICA
+
+*    ls_employee-id = 0001.
+*    ls_employee-first_name = 'LAURA'.
+*    ls_employee-last_name = 'MARTINEZ'.
+*    ls_employee-email = 'LAURAM@GMAIL.COM'.
+*    ls_employee-phone_number = '38512369'.
+*    ls_employee-salary = '2000.3'.
+*    ls_employee-currency_code = 'EUR'.
+
+*    APPEND ls_employee TO lt_employees.
+
+*    APPEND INITIAL LINE TO lt_employees.
+
+*    APPEND VALUE #( id = 002
+*    first_name = 'MARIO'
+*    last_name = 'MARTINEZ'
+*    email = 'MARIOM@GMAIL.COM'
+*    phone_number = '38512369'
+*    salary = '2000'
+*    currency_code = 'EUR'
+*    ) TO lt_employees. ""A ESTA NO SE LE PUEDE PONER INDICE YA QUE SIEMPRE SE COLOCA EN LA PARTE FINAL DE LA TABLA INTERNA
+
+*    out->write( data = lt_employees name = 'EMPLOYEE TABLE' ).
+
+
+**********CORRESPONDING ""SE UTILIZA PARA ASIGNAR AUTOMATICAMENTE VALORES ENTRE ESTRUCTURAS O TAABLAS CON CAMPOS DE IGUAL NOMBRE Y TIPO
+
+*    TYPES: BEGIN OF lty_flights,
+*             carrier     TYPE /dmo/carrier_id, ""ANTES ESTOS CAMPOS ERAN carrier_id Y EL DE ABAJO ERA connection_id, LOS MODIFIQUE PRA CUADRA ALGO EN LA ULTIMA LINEA
+*             connection  TYPE /dmo/connection_id,
+*             flight_date TYPE /dmo/flight_date,
+*           END OF lty_flights.
+
+
+*    DATA: gt_my_flights TYPE STANDARD TABLE OF lty_flights,
+*          gs_my_flight  TYPE lty_flights.
+
+
+*    SELECT FROM /dmo/flight
+*    FIELDS *                     ""AQUI CON EL ATERISCO TOMAMAMOS TODOS LO DATOS DE LA TABLA PERO SOLO PARA LECTURA
+*    WHERE currency_code EQ 'EUR' ""Y AUQI LUEGO SI LE DECIMOS QUE NOS QUEDAMOS CON TODOS AQUELOOS QUE LA MONEDA SEA EUR
+*    INTO TABLE @DATA(gt_flights).
+
+*    MOVE-CORRESPONDING gt_flights TO gt_my_flights. ""PARA HACER ESTO ES IMPORTANTE QUE AMBAS TABLAS TENGA COMPATIBLIDAD EN CAMPOS
+
+*    gt_my_flights = CORRESPONDING #( gt_flights ). ""ESTA ES OTRA FORMA MAS MODERNA DE HACERLO
+
+*****
+
+*    MOVE-CORRESPONDING gt_flights TO gt_my_flights KEEPING TARGET LINES. ""NO ENTENDI
+
+*    gt_my_flights = CORRESPONDING #( BASE ( gt_my_flights )  gt_flights ).
+
+****CASO CUANDO LA TABLA NO TIENE EL ISMO NOMBRE EN CAMPOS Y TOCA AHCER MAPEO MANUAL
+
+*    gt_my_flights = CORRESPONDING #( gt_flights MAPPING carrier = carrier_id connection = connection_id ). ""DEBIDO AQ EU ARRIBA MODIFIQUE LA ESTRUCTURA DE TABLA, AHORA ESTAS TABLAS TIENEN CAMPOS CON NOMBRES DISTINTOS
+
+*    out->write( data = gt_flights name = 'GT_FLIGHTS' ).
+*    out->write( |\n| ).
+*    out->write( data = gt_my_flights name = 'GT_MY_FLIGHTS' ).
+
+
+**********READ TABLE WITH INDEX ""SE USA PARA LEER REGISTRO ESPECFICA EN UNA TABLA INTERNA EN TIEMPO DE EJECUCION, ES ESCECNAIL PARA BUSCAR Y RECUPERAR DATOAS DE UNA TABLA INTERNA
+
+    SELECT FROM /dmo/airport
+    FIELDS *
+*    WHERE country EQ 'DE'
+    INTO TABLE @DATA(lt_flights).
+
+    IF sy-subrc EQ 0.
+
+*      READ TABLE lt_flights INTO DATA(ls_flight) INDEX 1.
+*      out->write( data = lT_flightS name = 'LT_FLIGHTS' ).
+*      out->write( data = ls_flight name = 'LS_FLIGHT' ).
+
+*      READ TABLE lt_flights INTO DATA(ls_flight2) INDEX 2 TRANSPORTING airport_id city. ""POR MEDIO DE TRANSPONTIG SE TRAE LOS CAMPOS QUE QUIERO ESPECIFICAMENTE
+*      out->write( data = ls_flight2 name = 'LS_FLIGHT2' ).
+
+*      READ TABLE lt_flights ASSIGNING FIELD-SYMBOL(<lfs_flight>) INDEX 3. ""AQUI USO ALGO QUE SE LLAMA APUNTADORES O FILE SYMBOLS, Y LO DECLARO EN LINEA, SON LITERALEMNETE LO QUE DICEN, DE HECHO FUNCIONA COMO UNA ESPECIE DE CORDENADAS
+*      out->write( data = <lfs_flight> name = '<LFS_FLIGHT>' ).
+
+*****ESTA ES LA NUEVA FORMA QUE USA ABAP PARA HACER EL TIPO DE OPERACIONES DE READ TABLE
+
+*      DATA(ls_data) = lt_flights[ 2 ]. ""DETNRO DE LOS [] VA EL INDICE
+*      out->write( data = ls_data name = 'LS_DATA' ).
+
+*      DATA(ls_data2) = VALUE #( lt_flights[ 20 ] OPTIONAL ).""SI NO AGREGAMOS EL AÑADIDO OPTIONAL, POR MAS QUE IMPIRAS NO DEVUELVE UN VALOR
+*      out->write( data = ls_data2 name = 'LS_DATA2' ).
+
+*      DATA(ls_data3) = VALUE #( lt_flights[ 20 ] DEFAULT lt_flights[ 1 ] ). ""EN ESTE CASO ES PARA NO MOSTRAR ALGO VACIO
+*      out->write( data = ls_data3 name = 'LS_DATA3' ).
+
+**********READ TABLE WITH KEY
+
+*      READ TABLE lt_flights INTO DATA(ls_flight) WITH KEY city = 'BERLIN'.
+*      out->write( data = lt_flights name = 'LT_FLIGHTS' ).
+*      out->write( data = LS_flight name = 'LS_FLIGHT' ).
+
+*      DATA(ls_flight2) = lt_flights[ airport_id = 'JFK' ].
+*      out->write( data = ls_flight2 name = 'LS_FLIGHT2' ).
+
+*      DATA(lv_flight) = lt_flights[ airport_id = 'JFK' ]-name. ""AQUI LO QUE HICIMOS FUE IMPRIMIR UN CAMPO EN ESPECIFICO, EN ESTE CASO FUE EL NOMBRE DE LA CIUDAD
+*      out->write( data = lv_flight name = 'LV_FLIGHT' ).
+
+**********READ TABLE WITH PRIMARY KEY
+
+*      DATA gt_flights_sort TYPE SORTED TABLE OF /dmo/airport
+*      WITH NON-UNIQUE KEY airport_id.
+
+*      SELECT FROM /dmo/airport
+*      FIELDS *
+*      INTO TABLE @gt_flights_sort.
+
+*      READ TABLE gt_flights_sort INTO DATA(ls_flight3) WITH TABLE KEY airport_id = 'LAS'.
+*      out->write( data = gt_flights_sort name = 'GT_FLIGHTS_SORT' ).
+*      out->write( data = ls_flight3 name = 'LS_FLIGHT3' ).
+
+*      DATA(ls_flight4) = gt_flights_sort[ KEY primary_key airport_id = 'LAS'  ]. ""CUANDO SE HACE CON UNA CAMPO CLAVE SE DEBE ESPECIFICAR, COMO EN ESTE CASO
+*      out->write( data = ls_flight4 name = 'LS_FLIGHT4' ).
+
+    ENDIF.
+
+**********LINE_EXISTS
+
+    DATA: gt_flights TYPE STANDARD TABLE OF /dmo/flight.
+
+    SELECT FROM /dmo/flight
+    FIELDS *
+    WHERE carrier_id EQ 'LH'
+    INTO TABLE @gt_flights.
+
+    IF sy-subrc EQ 0.
+
+*****FORMA ANTIGUA
+
+*      READ TABLE gt_flights WITH KEY connection_id = '0403' TRANSPORTING NO FIELDS. ""LO ULITMO ES SOLAMENTE PARA OBTENER LA RESPUESTA DE SI EL RESGISTRO EXISTE O NO EXISTE DENTRO DE LA TABLA INTERNA
+
+*      IF sy-subrc EQ 0.
+*        out->write( 'THE FLIGHT EXISTS IN THE DATABASE' ).
+*      ELSE.
+*        out->write( 'THE FLIGHT DOES NOT EXIST IN THE DATABASE' ).
+*      ENDIF.
+
+*****FORMA MODERNA
+
+      IF line_exists( gt_flights[ connection_id = '0403' ] ).
+        out->write( 'THE FLIGHT EXISTS IN THE DATABASE' ).
+      ELSE.
+        out->write( 'THE FLIGHT DOES NOT EXIST IN THE DATABASE' ).
+      ENDIF.
+
+
+
+    ENDIF.
+
+
+
+
+
+
+
+
 
 
 
