@@ -302,13 +302,13 @@ CLASS zcl_09_itab_angelo IMPLEMENTATION.
     WHERE carrier_id EQ 'LH'
     INTO TABLE @gt_flights.
 
-    IF sy-subrc EQ 0.
+*    IF sy-subrc EQ 0.
 
 *****FORMA ANTIGUA
 
 *      READ TABLE gt_flights WITH KEY connection_id = '0403' TRANSPORTING NO FIELDS. ""LO ULITMO ES SOLAMENTE PARA OBTENER LA RESPUESTA DE SI EL RESGISTRO EXISTE O NO EXISTE DENTRO DE LA TABLA INTERNA
 
-*      IF sy-subrc EQ 0.
+    IF sy-subrc EQ 0.
 *        out->write( 'THE FLIGHT EXISTS IN THE DATABASE' ).
 *      ELSE.
 *        out->write( 'THE FLIGHT DOES NOT EXIST IN THE DATABASE' ).
@@ -316,12 +316,63 @@ CLASS zcl_09_itab_angelo IMPLEMENTATION.
 
 *****FORMA MODERNA
 
-      IF line_exists( gt_flights[ connection_id = '0403' ] ).
-        out->write( 'THE FLIGHT EXISTS IN THE DATABASE' ).
-      ELSE.
-        out->write( 'THE FLIGHT DOES NOT EXIST IN THE DATABASE' ).
-      ENDIF.
+*      IF line_exists( gt_flights[ connection_id = '0403' ] ).
+*        out->write( 'THE FLIGHT EXISTS IN THE DATABASE' ).
+*      ELSE.
+*        out->write( 'THE FLIGHT DOES NOT EXIST IN THE DATABASE' ).
+*      ENDIF.
 
+**********LINE_INDEX
+
+*****FORMA ANTIGUA
+
+*      READ TABLE gt_flights WITH KEY connection_id = '0403' TRANSPORTING NO FIELDS.
+
+*      DATA(lv_index) = sy-tabix.
+*      out->write( data = gt_flights name = 'GT_FLIGHTS' ).
+*      out->write( lv_index ).
+
+*****FORMA ACTIAUL MEDIANTE EXPRESIONES DE TABLA
+
+*      DATA(lv_index) = line_index( gt_flights[ connection_id = '0401' ] ).
+*      out->write( data = gt_flights name = 'GT_FLIGHTS' ).
+*      out->write( data = lv_index name = 'LV_INDEX' ).
+
+*****FUNCION LINES ""SE USA PARA SABER CUANTO REGISTROS HAY EN UNA TABLA
+
+*      DATA(lv_num) = lines( gt_flights ).
+*      out->write( lv_num ).
+
+**********LOOP AT ""SIRVE PARA EJECUTAR UN BLOQUE DE CODIGO REPETIDAMENTE PARA CADA ENTADA DE UNA TABLA INTERNA, PERMITIENDO LEER Y MANIPULAR LOS DATOS DE CADA FILA
+
+      DATA gs_flight TYPE /dmo/flight.
+      LOOP AT gt_flights INTO gs_flight.
+
+        out->write( data = gs_flight ).
+        out->write( |\n| ).
+
+      ENDLOOP.
+
+      LOOP AT gt_flights INTO DATA(gs_flight2) WHERE connection_id = '0401'.
+
+        out->write( data = gs_flight2 name = 'GS_FLIGHT2').
+
+      ENDLOOP.
+
+*      LOOP AT gt_flights ASSIGNING FIELD-SYMBOL(<lfs_flight>) WHERE connection_id = '0400'. ""EL HACERLO CON APUNTADOR ES QUE BASICAMENTE NO GUARDA ESPACIO DE LA MEMORIA
+
+*        out->write( data = <lfs_flight> name = '<lfs_flight>' ).
+
+*      ENDLOOP.
+
+      LOOP AT gt_flights ASSIGNING FIELD-SYMBOL(<lfs_flight>) FROM 3 TO 8. ""AQUI SE ESTA ITERANDO
+        out->write( data = <lfs_flight> name = '<lfs_flight>' ).
+
+        <lfs_flight>-currency_code = 'COP'. ""AQUI LE CMBIAMOS EL VALOR DE LA MONEDA
+
+      ENDLOOP.
+
+      out->write( data = gt_flights name = 'GT_FLIGHTS'). ""IMPRIMIO AFUERA PORQUE QUWERIA VER EL RESULTADO FINAL
 
 
     ENDIF.
