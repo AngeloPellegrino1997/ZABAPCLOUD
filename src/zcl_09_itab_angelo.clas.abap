@@ -308,7 +308,7 @@ CLASS zcl_09_itab_angelo IMPLEMENTATION.
 
 *      READ TABLE gt_flights WITH KEY connection_id = '0403' TRANSPORTING NO FIELDS. ""LO ULITMO ES SOLAMENTE PARA OBTENER LA RESPUESTA DE SI EL RESGISTRO EXISTE O NO EXISTE DENTRO DE LA TABLA INTERNA
 
-    IF sy-subrc EQ 0.
+*    IF sy-subrc EQ 0.
 *        out->write( 'THE FLIGHT EXISTS IN THE DATABASE' ).
 *      ELSE.
 *        out->write( 'THE FLIGHT DOES NOT EXIST IN THE DATABASE' ).
@@ -375,7 +375,7 @@ CLASS zcl_09_itab_angelo IMPLEMENTATION.
       out->write( data = gt_flights name = 'GT_FLIGHTS'). ""IMPRIMIO AFUERA PORQUE QUWERIA VER EL RESULTADO FINAL
 
 
-    ENDIF.
+*    ENDIF.
 
 
 
