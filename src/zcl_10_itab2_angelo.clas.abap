@@ -280,19 +280,87 @@ CLASS zcl_10_itab2_angelo IMPLEMENTATION.
     INTO TABLE @DATA(lt_airline)
     UP TO 50 ROWS.
 
-    LOOP AT lt_flights INTO DATA(ls_flight_let).
+*    LOOP AT lt_flights INTO DATA(ls_flight_let).
 
-      DATA(lv_flights) = CONV string( LET lv_aIRline = lt_airline[ carrier_id = ls_flight_let-carrier_id ]-travel_id
-                                          lV_flight_price = lt_flights[ carrier_id = ls_flight_let-carrier_id
-                                                                    connection_id = ls_flight_let-connection_id  ]-price
-                                          lv_carrid = lt_airline[ carrier_id = ls_flight_let-carrier_id ]-carrier_id
-                                   IN | { lv_carrid } / AIRLINE NAME: { lv_airline } / FLIGHT PRICE: { lv_flight_price }|
-                                                                                                                           ).
+*      DATA(lv_flights) = CONV string( LET lv_aIRline = lt_airline[ carrier_id = ls_flight_let-carrier_id ]-travel_id
+*                                          lV_flight_price = lt_flights[ carrier_id = ls_flight_let-carrier_id
+*                                                                    connection_id = ls_flight_let-connection_id  ]-price
+*                                          lv_carrid = lt_airline[ carrier_id = ls_flight_let-carrier_id ]-carrier_id
+*                                   IN | { lv_carrid } / AIRLINE NAME: { lv_airline } / FLIGHT PRICE: { lv_flight_price }|
+*    ).
 
- OUT->write(  DATA = lv_flights ).
+*        OUT->write(  DATA = lv_flights ).
+
+*    ENDLOOP.
+
+**********BASE ""SE USA PARA TOMAR EN CUENTA DATOS DE OTRAS TABLAS EN UNA TABLA EN TIEMPO DE EJECUCION, ALGO ASI COMO AGREGAR REGISTROS
+
+*    out->write( data = lt_flights name = 'INITIAL LT_FLIGHTS' ).
+
+*    DATA lt_seats TYPE TABLE OF /dmo/flight.
+
+*    lt_seats = VALUE #( BASE lt_flights (
+*                             carrier_id = 'CO'
+*                             connection_id = '000123'
+*                             flight_date = cl_abap_context_info=>get_system_date(  )
+*                             price    = '2000'
+*                             currency_code = 'COP'
+*                             plane_type_id = 'B213-58'
+*                             seats_max = 120
+*                             seats_occupied = 100                                ) ).
+
+
+*    lt_seats = VALUE #( BASE lt_seats ( LINES OF lt_flights )
+
+*                             (  carrier_id = 'PE'
+*                                 connection_id = '000123'
+*                                 flight_date = cl_abap_context_info=>get_system_date(  )
+*                                 price    = '500'
+*                                 currency_code = 'USD'
+*                                 plane_type_id = 'B213-58'
+*                                 seats_max = 50
+*                                 seats_occupied = 10     )
+
+
+*                                                             ).
+
+
+*    lt_seats = CORRESPONDING #( BASE ( lt_seats ) lt_flights ).
+
+
+*    out->write( data = lt_flights name = 'LT_SEATS' ).
+
+
+***********GROUP BY ""SE USA PARA AGRUPAR LAS FILAS DE UNA TABLA INTERNA Y EJECUTA EN BUCLE ESTOS GRUPOS, ES UNA VARIANTE DDE LOOP AT
+
+    SELECT FROM /dmo/flight
+    FIELDS *
+    INTO TABLE @DATA(gt_dmo_flight).
+
+    DATA gt_members LIKE gt_dmo_flight.
+
+*****GROUPING BY COLUMN
+
+    LOOP AT gt_dmo_flight ASSIGNING FIELD-SYMBOL(<lFs_dmo_flight>)
+
+*     GROUP BY <lfs_dmo_flight>-carrier_id.
+
+GROUP BY (  airline = <lfs_dmo_flight>-carrier_id
+                  plane = <lfs_dmo_flight>-plane_type_id                                       ).
+
+      CLEAR gt_members.
+
+      LOOP AT GROUP <lfs_dmo_flight> INTO DATA(gs_member).
+
+
+        gt_members = VALUE #( BASE gt_members ( gs_member ) ).
+
+      ENDLOOP.
+
+
+      out->write( data = gt_members name = '<lFs_dmo_flight>' ).
 
     ENDLOOP.
-
 
 
 
